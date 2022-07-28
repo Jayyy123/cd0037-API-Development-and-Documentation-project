@@ -67,32 +67,296 @@ One note before you delve into your tasks: for each endpoint, you are expected t
 8. Create a `POST` endpoint to get questions to play the quiz. This endpoint should take a category and previous question parameters and return a random questions within the given category, if provided, and that is not one of the previous questions.
 9. Create error handlers for all expected errors including 400, 404, 422, and 500.
 
-## Documenting your Endpoints
+##### API  DOUCMENTATION by JOSEPH OFILI
 
-You will need to provide detailed documentation of your API endpoints including the URL, request parameters, and the response body. Use the example below as a reference.
+`GET '/categories'`
 
-### Documentation Example
+- Fetches a dictionary which either contains
+  - on success :
+    - the categories which is a dictionary which contain keys of id and type and their values.
+    - the success i.e True or False
+    - and the status code of either 200
 
-`GET '/api/v1.0/categories'`
+    # SUCCESS
 
-- Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
+    ```json
+    {
+      "categories": {
+        "id" :1, 
+        "type":"Science",
+        "id" :2, 
+        "type":"Art",
+        "id" :3, 
+        "type":"Geography",
+        "id" :4, 
+        "type":"History",
+        "id" :5, 
+        "type":"Entertainment",
+        "id" :6, 
+        "type":"Sports"
+      },
+      "success":True,
+      "total_categories": "total number",
+      "status_code":200
+    }
+    ```
+
+  - on  failure :
+      - A 404 not found error with the error code, a message and the success set to False.
+    # FAILURE
+
+    ```json
+      {
+        "success": False, 
+        "error code": 404,
+        "message": " resource was Not found!"
+      }
+    ```
+
 - Request Arguments: None
-- Returns: An object with a single key, `categories`, that contains an object of `id: category_string` key: value pairs.
+- Returns: An object with a single key, categories, that contains an object of id: category_string key:value pairs.
+
+
+
+
+---
+
+`GET '/questions?page=${integer}'`
+
+- Fetches a dictionary which either contains
+  - on success :
+    - Fetches a paginated set of questions, a total number of questions, all the categories which is a dictionary which contain keys of id and type and their values and current category string.
+    - Request Arguments: `page` - integer
+    - Returns: An object with 10 paginated questions, total questions, object including all categories, and current category string
+
+    # SUCCESS
+
+    ```json
+      {
+        "questions": [
+          {
+            "id": 1,
+            "question": "This is a question",
+            "answer": "This is an answer",
+            "difficulty": 5,
+            "category": 2
+          }
+        ],
+        "totalQuestions": 100,
+        "categories": {
+          "id" :1, 
+          "type":"Science",
+          "id" :2, 
+          "type":"Art",
+          "id" :3, 
+          "type":"Geography",
+          "id" :4, 
+          "type":"History",
+          "id" :5, 
+          "type":"Entertainment",
+          "id" :6, 
+          "type":"Sports"
+        },
+        "currentCategory": "ALL"
+      }
+    ```
+
+  - on  failure :
+      - A 404 not found error with the error code, a message and the success set to False.
+    # FAILURE
+
+    ```json
+      {
+        "success": False, 
+        "error code": 404,
+        "message": " resource was Not found!"
+      }
+    ```
+
+---
+
+`GET '/categories/${id}/questions'`
+
+- Fetches a dictionary which either contains
+  - on success :
+    - Fetches questions for a cateogry specified by id request argument
+    - Request Arguments: `id` - integer
+    - Returns: An object with questions for the specified category, total questions, and current category string
+
+    # SUCCESS
+
+    ```json
+      {
+        "questions": [
+          {
+            "id": 1,
+            "question": "This is a question",
+            "answer": "This is an answer",
+            "difficulty": 5,
+            "category": 2
+          }
+        ],
+        "totalQuestions": 100,
+        "categories": {
+          "id" :1, 
+          "type":"Science",
+          "id" :2, 
+          "type":"Art",
+          "id" :3, 
+          "type":"Geography",
+          "id" :4, 
+          "type":"History",
+          "id" :5, 
+          "type":"Entertainment",
+          "id" :6, 
+          "type":"Sports"
+        },
+        "currentCategory": "Entertainment"
+      }
+    ```
+
+  - on  failure :
+      - A 404 not found error with the error code, a message and the success set to False.
+    # FAILURE
+
+    ```json
+      {
+        "success": False, 
+        "error code": 404,
+        "message": " resource was Not found!"
+      }
+    ```
+
+---
+
+`DELETE '/questions/${id}'`
+
+- Deletes a specified question using the id of the question
+- Request Arguments: `id` - integer
+- Returns: 
+  # ON SUCCESS
+    ```json
+        {
+          "success": True,
+          "message": "question with {question_id} has been successfully deleted from the database!"
+        }
+    ```
+  # ON FAILURE
+      ```json
+      {
+        "success": False, 
+        "error code": 404,
+        "message": " resource was Not found!"
+      }
+    ```
+
+---
+
+`POST '/quizzes'`
+
+- Sends a post request in order to get the next question
+- Request Body:
+
+  ```json
+  {
+      "previous_questions": [1, 4, 20, 15],
+      "quiz_category": "current category"
+  }
+  ```
+
+- Returns: a single new question object
+    # ON SUCCESS
+      ```json
+          {
+            "category": "History",
+            "question": {
+                  "id": 1,
+                  "question": "This is a question",
+                  "answer": "This is an answer",
+                  "difficulty": 5,
+                  "category": 2
+                },
+            "difficulty": 4
+          }
+      ```
+    # ON FAILURE
+    ```json
+      {
+        "success": False, 
+        "error code": 422,
+        "message": " resource was unprocessable!"
+      }
+    ```
+
+---
+
+`POST '/questions/create'`
+
+- Sends a post request in order to add a new question
+- Request Body:
 
 ```json
 {
-  "1": "Science",
-  "2": "Art",
-  "3": "Geography",
-  "4": "History",
-  "5": "Entertainment",
-  "6": "Sports"
+  "question": "Heres a new question string",
+  "answer": "Heres a new answer string",
+  "difficulty": 1,
+  "category": 3
 }
 ```
 
-## Testing
+- Returns:
+  # ON SUCCESS
+      ```json
+          {
+            "status": 200,
+            "message": "New Question has been inserted successfully"
+          }
+      ```
+    # ON FAILURE
+        ```json
+        {
+          "status": False, 
+          "error code": 422,
+          "message": " resource was unprocessable!"
+        }
+    ```
 
-Write at least one test for the success and at least one error behavior of each endpoint using the unittest library.
+---
+
+`POST '/questions/search'`
+
+- Sends a post request in order to search for a specific question by search term
+- Request Body:
+
+      ```json
+      {
+        "searchTerm": "this is the term the user is looking for"
+      }
+      ```
+      
+
+- Returns: 
+    # ON SUCCESS
+    -any array of questions, a number of totalQuestions that met the search term and the current category string
+    ```json
+      {
+
+          "success":True,
+          "questions":[
+                        {
+                          "id": 1,
+                          "question": "This is a question",
+                          "answer": "This is an answer",
+                          "difficulty": 5,
+                          "category": 5
+                        }
+                      ],
+          "total_questions": 1,
+          "current_category": "history"
+      }
+    ```
+
+## Testing
 
 To deploy the tests, run
 
