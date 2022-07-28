@@ -18,6 +18,7 @@ class QuestionView extends Component {
 
   componentDidMount() {
     this.getQuestions();
+    console.log(this.state.questions)
   }
 
   getQuestions = () => {
@@ -25,11 +26,12 @@ class QuestionView extends Component {
       url: `/questions?page=${this.state.page}`, //TODO: update request URL
       type: 'GET',
       success: (result) => {
+        console.log(result)
         this.setState({
           questions: result.questions,
           totalQuestions: result.total_questions,
           categories: result.categories,
-          currentCategory: result.current_category,
+          // currentCategory: result.current_category,
         });
         return;
       },
@@ -84,7 +86,7 @@ class QuestionView extends Component {
 
   submitSearch = (searchTerm) => {
     $.ajax({
-      url: `/questions`, //TODO: update request URL
+      url: `/questions/search`, //TODO: update request URL
       type: 'POST',
       dataType: 'json',
       contentType: 'application/json',
@@ -106,6 +108,7 @@ class QuestionView extends Component {
         return;
       },
     });
+    console.log('all new=>',this.state.questions)
   };
 
   questionAction = (id) => (action) => {
@@ -127,6 +130,7 @@ class QuestionView extends Component {
   };
 
   render() {
+    console.log(this.state.questions)
     return (
       <div className='question-view'>
         <div className='categories-list'>
@@ -145,13 +149,14 @@ class QuestionView extends Component {
                   this.getByCategory(id);
                 }}
               >
-                {this.state.categories[id]}
+                {this.state.categories[id].type}
                 <img
                   className='category'
-                  alt={`${this.state.categories[id].toLowerCase()}`}
-                  src={`${this.state.categories[id].toLowerCase()}.svg`}
+                  alt={`${this.state.categories[id].type}`}
+                  src={`${this.state.categories[id].type}.svg`}
                 />
               </li>
+              // console.log(this.state.categories[Object.keys(this.state.categories)[0]])
             ))}
           </ul>
           <Search submitSearch={this.submitSearch} />
@@ -159,11 +164,12 @@ class QuestionView extends Component {
         <div className='questions-list'>
           <h2>Questions</h2>
           {this.state.questions.map((q, ind) => (
+            // console.log('huh?',this.state.categories[ind])
             <Question
               key={q.id}
               question={q.question}
               answer={q.answer}
-              category={this.state.categories[q.category]}
+              category={this.state.categories[ind]}
               difficulty={q.difficulty}
               questionAction={this.questionAction(q.id)}
             />

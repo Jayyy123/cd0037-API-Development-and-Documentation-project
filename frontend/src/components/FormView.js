@@ -19,7 +19,12 @@ class FormView extends Component {
       url: `/categories`, //TODO: update request URL
       type: 'GET',
       success: (result) => {
+        console.log('=========>')
+        console.log(result.categories)
+        console.log(' \n')
         this.setState({ categories: result.categories });
+        console.log('here')
+        console.log(this.state.categories[Object.keys(this.state.categories)[0]])
         return;
       },
       error: (error) => {
@@ -27,12 +32,13 @@ class FormView extends Component {
         return;
       },
     });
+    console.log(this.state.categories)
   }
 
   submitQuestion = (event) => {
     event.preventDefault();
     $.ajax({
-      url: '/questions', //TODO: update request URL
+      url: '/questions/create', //TODO: update request URL
       type: 'POST',
       dataType: 'json',
       contentType: 'application/json',
@@ -62,6 +68,8 @@ class FormView extends Component {
   };
 
   render() {
+    const {categories} = this.state;
+
     return (
       <div id='add-form'>
         <h2>Add a New Trivia Question</h2>
@@ -93,8 +101,8 @@ class FormView extends Component {
             <select name='category' onChange={this.handleChange}>
               {Object.keys(this.state.categories).map((id) => {
                 return (
-                  <option key={id} value={id}>
-                    {this.state.categories[id]}
+                  <option key={id} >
+                    {categories[id].type}
                   </option>
                 );
               })}

@@ -34,7 +34,7 @@ class QuizView extends Component {
     });
   }
 
-  selectCategory = ({ type, id = 0 }) => {
+  selectCategory = ({ type='all', id = 0 }) => {
     this.setState({ quizCategory: { type, id } }, this.getNextQuestion);
   };
 
@@ -47,6 +47,7 @@ class QuizView extends Component {
     if (this.state.currentQuestion.id) {
       previousQuestions.push(this.state.currentQuestion.id);
     }
+    console.log(this.state.quizCategory)
 
     $.ajax({
       url: '/quizzes', //TODO: update request URL
@@ -114,10 +115,10 @@ class QuizView extends Component {
                 value={id}
                 className='play-category'
                 onClick={() =>
-                  this.selectCategory({ type: this.state.categories[id], id })
+                  this.selectCategory({ type: this.state.categories[id].type, id })
                 }
               >
-                {this.state.categories[id]}
+                {this.state.categories[id].type}
               </div>
             );
           })}
